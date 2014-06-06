@@ -1,3 +1,9 @@
 {% for k, v in elasticsearch.config.iteritems() %}
 {{ k }}: {{ v }}
 {% endfor %}
+{% if 'unicast' in elasticsearch %}
+discovery.zen.ping.unicast.hosts:
+  {% for host in groups[elasticsearch.unicast.group] %}
+  - {{ hostvars[host]['ansible_' + elasticsearch.unicast.interface].ipv4.address }}
+  {% endfor %}
+{% endif %}
