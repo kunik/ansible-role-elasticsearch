@@ -1,0 +1,27 @@
+- name: download
+  get_url: >
+    url={{ elasticsearch.deb }}
+    sha256sum={{ elasticsearch.deb_sha256 }}
+    dest=/tmp/elasticsearch.deb
+
+- name: install
+  sudo: true
+  command: >
+    /usr/bin/dpkg -i /tmp/elasticsearch.deb
+    creates=/usr/share/elasticsearch
+  register: result
+
+- name: generate config
+  sudo: true
+  template: >
+    src=elasticsearch.yml.j2
+    dest=/etc/elasticsearch/elasticsearch.yml
+    mode=0644
+  notify: restart elasticsearch
+
+- name: install plugins
+  sudo: true
+  command: >
+    /usr/share/elasticsearch/bin/plugin -install {{ item.name }}
+    creates=/usr/share/elasticsearch/plugins/{{ item.creates }}
+  with_items: elasticsearch.plugins

@@ -1,0 +1,22 @@
+- name: restart elasticsearch
+  debug: msg='Restarting elasticsearch'
+  changed_when: true
+  notify:
+    - stop elasticsearch
+    - wait for stop elasticsearch
+    - start elasticsearch
+
+- name: stop elasticsearch
+  sudo: true
+  action: service name=elasticsearch state=stopped
+
+- name: wait for stop elasticsearch
+  sudo: true
+  wait_for: >
+    port={{ elasticsearch.config['http.port']|default(9200) }}
+    state=stopped
+    timeout=10
+
+- name: start elasticsearch
+  sudo: true
+  action: service name=elasticsearch state=started
