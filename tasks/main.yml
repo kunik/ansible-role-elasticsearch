@@ -2,14 +2,14 @@
   get_url: >
     url={{ elasticsearch.deb }}
     sha256sum={{ elasticsearch.deb_sha256 }}
-    dest=/tmp/elasticsearch.deb
+    dest=/tmp/elasticsearch.deb-{{ elasticsearch.deb_sha256 }}
+  register: elasticsearch_new_version
 
 - name: install
   sudo: true
   command: >
-    /usr/bin/dpkg -i /tmp/elasticsearch.deb
-    creates=/usr/share/elasticsearch
-  register: result
+    /usr/bin/dpkg -i /tmp/elasticsearch.deb-{{ elasticsearch.deb_sha256 }}
+  when: elasticsearch_new_version | changed
 
 - name: generate config
   sudo: true
@@ -18,6 +18,7 @@
     dest=/etc/elasticsearch/elasticsearch.yml
     mode=0644
   notify: restart elasticsearch
+  when: "'config' in elasticsearch"
 
 - name: install plugins
   sudo: true
