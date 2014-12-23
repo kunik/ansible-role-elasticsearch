@@ -1,6 +1,7 @@
 elasticsearch:
   deb: https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.2.deb
   deb_sha256: 17086186a26216d480f096fac7fd8c55a4264e4963980e53e579c3d19985812b
+  port: 9200
   plugins:
     - name: mobz/elasticsearch-head
       creates: head

@@ -8,7 +8,7 @@
 - name: install
   sudo: true
   command: >
-    /usr/bin/dpkg -i /tmp/elasticsearch.deb-{{ elasticsearch.deb_sha256 }}
+    /usr/bin/dpkg -i --force-confdef /tmp/elasticsearch.deb-{{ elasticsearch.deb_sha256 }}
   when: elasticsearch_new_version | changed
 
 - name: generate config

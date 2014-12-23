@@ -13,7 +13,7 @@
 - name: wait for stop elasticsearch
   sudo: true
   wait_for: >
-    port={{ elasticsearch.config['http.port']|default(9200) }}
+    port={{ elasticsearch.port | default(9200) }}
     state=stopped
     timeout=10
 
